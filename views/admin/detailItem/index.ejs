@@ -1,0 +1,234 @@
+<%- include('../../templates/header.ejs') %>
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <%- include('../../templates/message.ejs') %>
+      <!-- Page Heading -->
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Detail Item</h6>
+        </div>
+        <div class="card-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-feature" role="tab" aria-controls="show-feature"
+                aria-selected="true">Show Feature</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#show-activity" role="tab" aria-controls="show-activity"
+                aria-selected="false">Show Activity</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="show-feature" role="tabpanel" aria-labelledby="show-feature-tab"
+              style="padding-top: 20px;">
+              <div class="card shadow mb-4 mt-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <form method="POST" action="/admin/item/add_feature" enctype="multipart/form-data">
+                        <input type="hidden" value="<%= id %>" name="id">
+                        <input type="hidden" value="add" name="action" id="action" >
+                        <input type="hidden" value="" name="id_feature" id="id_feature" >
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Name</label>
+                          <input type="text" class="form-control" name="name" id="name" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Qty</label>
+                          <input type="number" class="form-control" name="qty" id="qty" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Image Feature</label>
+                          <input type="file" class="form-control" name="image" required id="image">
+                          <span id="span_image_feature" style="display: none;">* Pilih image uutuk update image feature</span>
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-md-7">
+                      <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th>No</th>
+                              <th>Nama</th>
+                              <th>Qty</th>
+                              <th>Image</th>
+                              <th>#</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% for(let i=0; i < feature.length; i++){ %>
+                              <tr>
+                                <td style="width: 10%;">
+                                  <%= i+1 %>
+                                </td>
+                                <td>
+                                  <%= feature[i].name %>
+                                </td>
+                                <td>
+                                  <%= feature[i].qty %>
+                                </td>
+                                <td style="width: auto;">
+                                  <img src="../../../<%= feature[i].imageUrl %>" alt="" style="width: 70px; height: auto;" />
+                                </td>
+                                <td style="width: 10%;">
+                                  <a href="javascript:void(0)" data-id="<%= feature[i].id %>" data-name="<%= feature[i].name %>" data-qty="<%= feature[i].qty %>" class="btn btn-warning btn-circle btn-sm btn-update"> <i class="fa fa-edit"></i></a>
+                                  <a href="javascript:void(0)" data-id="<%= feature[i].id %>" data-itemid="<%= id %>" class="btn btn-danger btn-circle btn-sm btn-delete"><i class="fa fa-trash"></i></a>
+                                </td>
+                              </tr>
+                            <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="show-activity" role="tabpanel" aria-labelledby="show-activity-tab" style="padding-top: 20px;">
+              <div class="card shadow mb-4 mt-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-5">
+                      <form method="POST" action="/admin/item/add_activity" enctype="multipart/form-data">
+                        <input type="hidden" value="<%= id %>" name="item_id">
+                        <input type="hidden" value="add" name="action" id="action_activity">
+                        <input type="hidden" value="" name="id_activity" id="id_activity">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Name</label>
+                          <input type="text" class="form-control" name="name_activity" id="name_activity" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Type</label>
+                          <input type="text" class="form-control" name="type" id="type" required>
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Image Activity</label>
+                          <input type="file" class="form-control" name="image" id="image_activity" required>
+                          <span id="span_image_activity" style="display: none;">* Pilih image uutuk update image activity</span>
+                        </div>
+                        <div class="form-group">
+                          <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-md-7">
+                      <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTableActivity" width="100%" cellspacing="0">
+                          <thead>
+                            <tr>
+                              <th>No</th>
+                              <th>Nama</th>
+                              <th>Type</th>
+                              <th>Image</th>
+                              <th>#</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% for(let i=0; i < activity.length; i++){ %>
+                              <tr>
+                                <td style="width: 10%;">
+                                  <%= i+1 %>
+                                </td>
+                                <td>
+                                  <%= activity[i].name %>
+                                </td>
+                                <td>
+                                  <%= activity[i].type %>
+                                </td>
+                                <td style="width: auto;">
+                                  <img src="../../../<%= activity[i].imageUrl %>" alt="" style="width: 70px; height: auto;" />
+                                </td>
+                                <td style="width: 10%;">
+                                  <a href="javascript:void(0)" data-id="<%= activity[i].id %>" data-name="<%= activity[i].name %>"
+                                    data-type="<%= activity[i].type %>" class="btn btn-warning btn-circle btn-sm btn-update-activity"> <i
+                                      class="fa fa-edit"></i></a>
+                                  <a href="javascript:void(0)" data-id="<%= activity[i].id %>" data-itemid="<%= id %>"
+                                    class="btn btn-danger btn-circle btn-sm btn-delete-activity"><i class="fa fa-trash"></i></a>
+                                </td>
+                              </tr>
+                             <% } %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+  <!-- /.container-fluid -->
+  <%- include('../../templates/footer.ejs') %>
+  <script>
+    $('#dataTableActivity').DataTable()
+
+    $('#dataTable').on('click', '.btn-update', function () {
+      const name = $(this).data('name')
+      const qty = $(this).data('qty')
+      const id_feature = $(this).data('id')
+      $('#name').val(name)
+      $('#qty').val(qty)
+      $('#id_feature').val(id_feature)
+      $('#image').removeAttr('required')
+      $("#action").val('edit')
+      $('#span_image_feature').css('display','block')
+    })
+
+    $('#dataTable').on('click', '.btn-delete', function () {
+      const id = $(this).data('id')
+      const itemid = $(this).data('itemid')
+      axios.post('/admin/deleteFeature', {
+        id: id,
+        itemId:itemid
+      })
+        .then(function (response) {
+          if (response.status == 200) {
+            location.reload()
+          }
+          else {
+            alert('Data gagal dihapus')
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    })
+
+    $('#dataTableActivity').on('click', '.btn-update-activity', function () {
+      const name = $(this).data('name')
+      const type = $(this).data('type')
+      const id_activity = $(this).data('id')
+      $('#name_activity').val(name)
+      $('#type').val(type)
+      $('#id_activity').val(id_activity)
+      $('#image_activity').removeAttr('required')
+      $("#action_activity").val('edit')
+      $('#span_image_activity').css('display', 'block')
+    })
+
+    $('#dataTableActivity').on('click', '.btn-delete-activity', function () {
+      const id = $(this).data('id')
+      const itemid = $(this).data('itemid')
+      axios.post('/admin/deleteActivity', {
+        id: id,
+        itemId: itemid
+      })
+        .then(function (response) {
+          if (response.status == 200) {
+            location.reload()
+          }
+          else {
+            alert('Data gagal dihapus')
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    })
+  </script>

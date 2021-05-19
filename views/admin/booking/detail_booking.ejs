@@ -1,0 +1,82 @@
+<%- include('../../templates/header.ejs') %>
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <%- include('../../templates/message.ejs') %>
+    <!-- Page Heading -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Detail Booking</h6>
+      </div>
+      <div class="card-body" style="height: auto;">
+        <div class="row">
+          <div class="col-md-4">
+            <span>Bukti Pembayaran</span>
+            <img src="../../../<%= booking.payments.proofPayment %>" style="width: 100%; height: 100%; display: block;"/>
+            
+          </div>
+          <div class="col-md-8">
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Invoice</th>
+                    <th>Member</th>
+                    <th>Total Bayar</th>
+                    <th>Bank From</th>
+                    <th>Item</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><%= booking.invoice %></td>
+                    <td><%= booking.memberId.firstName %> <%= booking.memberId.lastName %></td>
+                    <td>$<%= booking.total %></td>
+                    <td><%= booking.payments.bankFrom %> <%= booking.payments.bankFrom %></td>
+                    <td><%= booking.itemId.title %> </td>
+                  </tr>
+                </tbody>
+              </table>
+              
+            </div>
+            <% if(booking.payments.status == 'Proses') { %>
+            <button class="btn btn-success btn-sm" onclick="confirmationBooking('<%= booking._id %>','Accept')">
+              <i class="fa fa-check"></i> Confirmation
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="confirmationBooking('<%= booking._id %>','Reject')">
+              <i class="fa fa-times"></i> Reject
+            </button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <!-- /.container-fluid -->
+  <%- include('../../templates/footer.ejs') %>
+
+  <script>
+    const confirmationBooking=(idx, statusx)=>{
+      axios.post('/admin/booking/action', {
+        id: idx,
+        status: statusx
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(function (response) {
+        console.log(response)
+        if (response.status == 200) {
+          location.reload()
+        }
+        else {
+          alert('Data gagal ' + status)
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
+  </script>

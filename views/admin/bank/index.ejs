@@ -1,0 +1,178 @@
+<%- include('../../templates/header.ejs') %>
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+  <%- include('../../templates/message.ejs') %>
+    <!-- Page Heading -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="m-0 font-weight-bold text-primary">Data Bank</h6>
+          </div>
+          <div class="col-md-6" style="text-align: right;">
+            <button type="button" class="btn btn-primary" onclick="$('#modalTambahData').modal('show')">
+              Tambah Data
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Nama Bank</th>
+                <th>No. Rekening</th>
+                <th>Image</th>
+                <th>#</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(let i=0; i < bank.length; i++) { %>
+                <tr>
+                  <td style="width: 10%;">
+                    <%= i+1 %>
+                  </td>
+                  <td>
+                    <%= bank[i].name %>
+                  </td>
+                  <td>
+                    <%= bank[i].nameBank %>
+                  </td>
+                  <td>
+                    <%= bank[i].nomorRekening %>
+                  </td>
+                  <td style="width: auto;">
+                    <img src="../../../<%= bank[i].imageUrl %>" alt="" style="width: 70px; height: auto;"/>
+                  </td>
+                  <td style="width: 10%;">
+                    <a href="javascript:void(0)" class="btn btn-warning btn-circle btn-sm btn-update" data-id="<%= bank[i].id %>"
+                      data-name="<%= bank[i].name %>" data-name_bank="<%= bank[i].nameBank %>" data-nomor_rekening="<%= bank[i].nomorRekening %>">
+                      <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-circle btn-sm btn-delete"
+                      data-id="<%= bank[i].id %>"><i class="fa fa-trash"></i></a>
+                  </td>
+                </tr>
+                <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <!-- /.container-fluid -->
+<!-- Modal Tambah -->
+<div class="modal fade" id="modalTambahData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/admin/bank" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Name Bank</label>
+            <input type="text" class="form-control" name="name_bank" required>
+          </div>
+
+          <div class="form-group">
+            <label for="exampleInputEmail1">No. Rekening</label>
+            <input type="number" class="form-control" name="no_rekening" required>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Nama Rekening</label>
+            <input type="text" class="form-control" name="nama_rekening" required>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Image Bank</label>
+            <input type="file" class="form-control" name="image" required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="$('#modalTambahData').modal('hide')">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End Modal Tambah -->
+
+<!-- Modal Edit -->
+<div class="modal fade" id="modalEditData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/admin/bank?_method=PUT" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <input type="hidden" class="form-control" id="_id" name="_id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Name Bank</label>
+            <input type="text" class="form-control" id="name_bank" name="name_bank" required>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">No. Rekening</label>
+            <input type="number" class="form-control" id="no_rekening" name="no_rekening" required>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Nama Rekening</label>
+            <input type="text" class="form-control" id="nama_rekening" name="nama_rekening" required>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Image Bank</label>
+            <input type="file" class="form-control" id="image" name="image">
+            <span>Pilih gambar untuk update image</span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="$('#modalEditData').modal('hide')">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End Modal Edit -->
+
+<%- include('../../templates/footer.ejs') %>
+<script>
+  $('#dataTable').on('click','.btn-update',function(){
+    const id = $(this).data('id')
+    const name = $(this).data('name')
+    const name_bank = $(this).data('name_bank')
+    const nomor_rekening = $(this).data('nomor_rekening')
+    const nama_rekening = $(this).data('name')
+    $('#modalEditData').modal('show')
+    $('#name_bank').val(name)
+    $('#_id').val(id)
+    $('#no_rekening').val(nomor_rekening)
+    $('#nama_rekening').val(nama_rekening)
+  })
+  $('#dataTable').on('click', '.btn-delete', function () {
+    const id = $(this).data('id')
+    axios.post('/admin/deleteBank', {
+      id: id
+    })
+      .then(function (response) {
+        if(response.status == 200){
+          location.reload()
+        }
+        else{
+          alert('Data gagal dihapus')
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  })
+</script>

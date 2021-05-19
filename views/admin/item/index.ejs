@@ -1,0 +1,227 @@
+<%- include('../../templates/header.ejs') %>
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <%- include('../../templates/message.ejs') %>
+    <!-- Page Heading -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Data Item</h6>
+      </div>
+      
+      <div class="card-body">
+        <% if(action == 'view') { %>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show" role="tab" aria-controls="show"
+                aria-selected="true">Show Item</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add"
+                aria-selected="false">Add Item</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="show" role="tabpanel" aria-labelledby="show-tab"
+              style="padding-top: 20px;">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Title</th>
+                      <th>Price</th>
+                      <th>Country</th>
+                      <th>City</th>
+                      <th>#</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(let i=0; i < item.length; i++) { %>
+                      <tr>
+                        <td style="width: 10%;">
+                          <%= i+1 %>
+                        </td>
+                        <td>
+                          <%= item[i].title %>
+                        </td>
+                        <td>
+                          $ <%= item[i].price %>
+                        </td>
+                        <td>
+                          <%= item[i].country %>
+                        </td>
+                        <td>
+                          <%= item[i].city %>
+                        </td>
+                        <td style="width: 18%;">
+                          <a href="/admin/item/<%= item[i].id %>" class="btn btn-warning btn-circle btn-sm btn-update">
+                            <i class="fa fa-edit"></i>
+                          </a>
+                          <a href="/admin/item/show-image/<%= item[i].id %>" class="btn btn-circle btn-sm btn-info">
+                            <i class="fa fa-image"></i>
+                          </a>
+                          <a href="javascript:void(0)" class="btn btn-danger btn-circle btn-sm btn-delete"
+                            data-id="<%= item[i].id %>"><i class="fa fa-trash"></i></a>
+                          <a href="/admin/item/detail_item/<%= item[i].id %>" class="btn btn-success btn-circle btn-sm" data-id="<%= item[i].id %>"><i
+                              class="fa fa-plus"></i></a>
+                        </td>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="add" role="tabpanel" aria-labelledby="add-tab" style="padding: top 20px;">
+              <div class="card shadow mb-4 mt-2">
+                <div class="card-body">
+                  <form method="POST" action="/admin/item" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Title</label>
+                      <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Price</label>
+                      <input type="number" class="form-control" id="price" name="price" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">City</label>
+                      <input type="text" class="form-control" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Category</label>
+                      <select class="form-control" name="categoryId">
+                        <option>Pilih category</option>
+                        <% for (let i=0; i<category.length; i++){ %>
+                          <option value="<%= category[i].id %>">
+                            <%= category[i].name %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Image</label>
+                      <input type="file" class="form-control" multiple name="image" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Description</label>
+                      <textarea class="form-control" name="description" id="description"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <button type="button" class="btn btn-secondary" ">Close</button>
+                      <button type=" submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } else if(action == 'show image'){ %>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#show-image" role="tab" aria-controls="show-image"
+                aria-selected="true">Show Image</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="show-image" role="tabpanel" aria-labelledby="show-image-tab"
+              style="padding-top: 20px;">
+              <div class="card shadow mb-4 mt-2">
+                <div class="card-body">
+                  <div class="row">
+                    <% for(let x = 0; x< item.imageId.length; x++){ %>
+                      <div class="col-md-4">
+                        <img src="../../../<%= item.imageId[x].imageUrl %>" alt="" style="width: 100%;display: block; height: auto;margin-bottom: 20px;" />
+                      </div>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              <a href="/admin/item" class="btn btn-warning">Back</a>
+            </div>
+          </div>
+        <% } else{ %>
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#edit-item" role="tab" aria-controls="edit-item"
+                aria-selected="true">Edit Item</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="edit-item" role="tabpanel" aria-labelledby="edit-item-tab"
+              style="padding-top: 20px;">
+              <div class="card shadow mb-4 mt-2">
+                <div class="card-body">
+                  <form method="POST" action="/admin/editItem?_method=PUT" enctype="multipart/form-data">
+                    <div class="form-group">
+                      <input type="text" id="id" name="id" value="<%= item._id %>">
+                      <label for="exampleInputEmail1">Title</label>
+                      <input type="text" class="form-control" id="title" value="<%= item.title %>" name="title" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Price</label>
+                      <input type="number" class="form-control"value="<%= item.price %>"  id="price" name="price" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">City</label>
+                      <input type="text" class="form-control" value="<%= item.city %>" id="city" name="city" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Category</label>
+                      <select class="form-control" name="categoryId">
+                        <option value="<%= item.categoryId._id %>"><%= item.categoryId.name %></option>
+                        <% for (let i=0; i<category.length; i++){ %>
+                          <option value="<%= category[i].id %>">
+                            <%= category[i].name %>
+                          </option>
+                          <% } %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Image</label>
+                      <input type="file" class="form-control" multiple name="image" >
+                    </div>
+                    <div class="form-group">
+                      <label>Description</label>
+                      <textarea class="form-control" name="description" id="description"><%= item.description %></textarea>
+                    </div>
+                    <div class="form-group">
+                      <button type="button" class="btn btn-secondary">Close</button>
+                      <button type=" submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <a href="/admin/item" class="btn btn-warning">Back</a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+
+      
+    </div>
+
+
+  </div>
+  <!-- /.container-fluid -->
+  <%- include('../../templates/footer.ejs') %>
+  <script>
+    CKEDITOR.replace('description');
+
+    $('#dataTable').on('click','.btn-update',()=>{
+      const id = $(this).data('id')
+      axios.post('/admin/deleteItem', {
+        id: id
+      })
+        .then(function (response) {
+          if (response.status == 200) {
+            location.reload()
+          }
+          else {
+            alert('Data gagal dihapus')
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    })
+  </script>

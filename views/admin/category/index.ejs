@@ -1,0 +1,129 @@
+<%- include('../../templates/header.ejs') %>
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <%- include('../../templates/message.ejs') %>
+    <!-- Page Heading -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <div class="row">
+          <div class="col-md-6">
+            <h6 class="m-0 font-weight-bold text-primary">Data Category</h6>
+          </div>
+          <div class="col-md-6" style="text-align: right;">
+            <button type="button" class="btn btn-primary" onclick="$('#tambahData').modal('show')">
+              Tambah Data
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>#</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(let i = 0; i < category.length; i++) { %> 
+                <tr>
+                  <td style="width: 10%;"><%= i+1 %></td>
+                  <td><%= category[i].name %></td>
+                  <td style="width: 10%;">
+                    <a href="javascript:void(0)" class="btn btn-warning btn-circle btn-sm btn-update" data-id="<%= category[i].id %>" data-name="<%= category[i].name %>">
+                      <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-circle btn-sm btn-delete" data-id="<%= category[i].id %>"><i class="fa fa-trash"></i></a>
+                  </td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Modal Tambah -->
+<div class="modal fade" id="tambahData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/admin/category">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Tambah Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Name Category</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="$('#tambahData').modal('hide')">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+  <!-- End Modal Tambah -->
+
+<!-- Modal Tambah -->
+<div class="modal fade" id="editData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="/admin/category?_method=PUT">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Data</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Name Category</label>
+            <input type="text" class="form-control" id="name_category" name="name" required>
+            <input type="hidden" class="form-control" id="id_category" name="id">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="$('#editData').modal('hide')">Close</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End Modal Tambah -->
+
+<%- include('../../templates/footer.ejs') %>
+
+<script>
+  $('#dataTable').on('click','.btn-update',function(){
+    const id = $(this).data('id')
+    const name = $(this).data('name')
+    $('#editData').modal('show')
+    $('#name_category').val(name)
+    $('#id_category').val(id)
+  })
+  $('#dataTable').on('click', '.btn-delete', function () {
+    const id = $(this).data('id')
+    axios.post('/admin/deleteCategory', {
+      id: id
+    })
+      .then(function (response) {
+        if(response.status == 200){
+          location.reload()
+        }
+        else{
+          alert('Data gagal dihapus')
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  })
+</script>
