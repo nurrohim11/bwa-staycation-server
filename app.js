@@ -11,7 +11,7 @@ const mongoose = require('mongoose')
 // connect flash
 const flash = require('connect-flash');
 // connect ke mongodb
-mongoose.connect('mongodb://localhost:27017/db_staycation', {
+mongoose.connect('mongodb+srv://alkhattabi:XcLhUQyP_3m-@s3@cluster0.aqobu.mongodb.net/db_staycation?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -36,8 +36,14 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge:6000}
+  cookie: { maxAge:Date.now() + (30 * 86400 * 1000) }
 }))
+// app.use(express.session({ 
+//   secret: "secret", 
+//   store: new MemoryStore(), 
+//   maxAge: Date.now() + (30 * 86400 * 1000) 
+// }));
+
 // use connect flash
 app.use(flash())
 // use metho override
